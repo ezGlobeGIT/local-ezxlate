@@ -1,8 +1,11 @@
 # local_ezxlate — Text Extraction & Update API for Moodle
 
-`local_ezxlate` is a Moodle local plugin providing a secure API to extract and update textual content stored in Moodle: 
-courses, sections, activities, tags, questions.
-The plugin is designed for integration with external translation pipelines or automated content processing tools.
+`local_ezxlate` is a Moodle local plugin that offers a secure API for extracting and updating all Moodle 
+textual content — courses, sections, activities, tags, questions, and more.
+Created for EzGlobe and designed to support full multilingual translation, the plugin integrates smoothly 
+with external translation pipelines as well as automated content-processing systems, 
+ensuring efficient and accurate localization of Moodle content.
+
 
 ## Features
 
