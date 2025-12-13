@@ -35,15 +35,15 @@ namespace local_ezxlate\entities;
  */
 class section extends \local_ezxlate\entity {
     
-    protected $mainTable = "course_sections";
+    protected $maintable = "course_sections";
     
     protected function define_fields() {
         $this->add_fields("name", "summary");
         $modules = [];
         foreach(explode(",", $this->record("sequence")) as $cmid) {
-            $module_name = $this->get_module_name($cmid);
-            if ($module_name == "subsection") continue;
-            if (!empty($module_name)) $modules[$cmid] = $module_name;
+            $modulename = $this->get_module_name($cmid);
+            if ($modulename == "subsection") continue;
+            if (!empty($modulename)) $modules[$cmid] = $modulename;
         }
         $this->add_direct("modules", $modules)->only_get();
     }

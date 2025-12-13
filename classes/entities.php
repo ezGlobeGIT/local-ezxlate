@@ -36,40 +36,40 @@ namespace local_ezxlate;
 class entities implements tree_interface {
     
     protected $list = [];   
-    protected $onlyGet = false;
+    protected $onlyget = false;
     protected $error = "ok";
-    protected $entitiesError = [];
+    protected $entitieserror = [];
     
     /**
      * Constructor
      * 
      * @param stdClass|array list of records of lines to use to make each entity of the list
-     * @param string|array type $entityName of entity to join
+     * @param string|array type $entityname of entity to join
      *          if string : name of an entity (name of a class of namespace local_ezxlate\entities, ie question)
      *          if array : fields name to make enties with the fields as nodes
-     * @param string $indexOn name of the field to take the indexes of entities list (default is the primary key)
+     * @param string $indexon name of the field to take the indexes of entities list (default is the primary key)
      */    
-    function __construct($values, $entityName, $indexOn) {
+    function __construct($values, $entityname, $indexon) {
         // $values : records from the main table
         // $entityName : name of entity (class for entity)
         //          or array with  main table name, then field names for a basic entity based on a few fields of the table
         // $indexOn : field on witch index the entities
-        if (is_array($entityName)) {
-            $table = array_shift($entityName);
-            $fields = $entityName;
+        if (is_array($entityname)) {
+            $table = array_shift($entityname);
+            $fields = $entityname;
             $entity = "\\local_ezxlate\\entity";
         } else {
-            $entity = '\\local_ezxlate\\entities\\' . $entityName;
+            $entity = '\\local_ezxlate\\entities\\' . $entityname;
             $table = null;
             $fields = [];
         }
         foreach($values as $record) {
-            $this->list[$record->$indexOn] = new $entity($record, $table, $fields);
+            $this->list[$record->$indexon] = new $entity($record, $table, $fields);
         }
     }
 
     function only_get() {
-        $this->onlyGet = true;
+        $this->onlyget = true;
         return $this;
     }
     
@@ -87,20 +87,20 @@ class entities implements tree_interface {
 
     function update($data, $previous = null) {
         // Update the sub-entities
-        if ($this->onlyGet) return $this->error("notfound");
+        if ($this->onlyget) return $this->error("notfound");
         if (!is_object($data) and !is_array($data)) return $this->error("error");
         $ko = false;
-        foreach ($data as $index => $entity_data) {
+        foreach ($data as $index => $entitydata) {
             if (!isset($this->list[$index])) {
-                $this->entitiesError[$index] = "notfound";
+                $this->entitieserror[$index] = "notfound";
                 $ko = true;
                 continue;
             }
-            if (isset($previous->$index)) $that_previous = $previous->$index;
-            else $that_previous = new \stdClass();
-            if ( ! $this->list[$index]->update($entity_data, $that_previous)) {
+            if (isset($previous->$index)) $thatprevious = $previous->$index;
+            else $thatprevious = new \stdClass();
+            if ( ! $this->list[$index]->update($entitydata, $thatprevious)) {
                 $ko = true;
-                $this->entitiesError[$index] = "partial";
+                $this->entitieserror[$index] = "partial";
                 $this->error = "partial";
             }
         }
@@ -117,12 +117,12 @@ class entities implements tree_interface {
     function get_errors() {
         // Return all errors in the tree
         if ($this->error != "ok") return $this->error;
-        if (empty($this->entitiesError)) return null;
+        if (empty($this->entitieserror)) return null;
         $result = [];
-        foreach ($this->entitiesError as $index => $error) {
+        foreach ($this->entitieserror as $index => $error) {
             if ($error == "partial") {
-                $sub_result = $this->list[$index]->get_errors();
-                if (!empty($sub_result)) $result[$index] = $sub_result;
+                $subresult = $this->list[$index]->get_errors();
+                if (!empty($subresult)) $result[$index] = $subresult;
             } else if ($error != "ok") $result[$index] = $error;
         }
         if (empty($result)) return null;

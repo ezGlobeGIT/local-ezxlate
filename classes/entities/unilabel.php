@@ -35,7 +35,7 @@ use \local_ezxlate\entities;
  */
 class unilabel extends \local_ezxlate\entity {
     
-    protected $mainTable = "unilabel";
+    protected $maintable = "unilabel";
     
     protected function define_fields() {
         $this->add_fields("name", "intro");

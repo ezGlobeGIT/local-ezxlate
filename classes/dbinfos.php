@@ -52,17 +52,17 @@ class dbinfos {
      */    
     static protected $initial = [];    // As tables, but only for modified fields, with the initial length
     
-    /** @var bool $can_extend tue if we have and are allowed to extends fields when they are too little */
-    static protected $can_extend = null;
+    /** @var bool $canextend tue if we have and are allowed to extends fields when they are too little */
+    static protected $canextend = null;
     
     
     static function can_extend() {
         global $CFG, $DB;
-        if ( is_null(static::$can_extend)) {
-            if (get_config("local_ezxlate", "extend") == 0 ) static::$can_extend = false;
-            else static::$can_extend = true;
+        if ( is_null(static::$canextend)) {
+            if (get_config("local_ezxlate", "extend") == 0 ) static::$canextend = false;
+            else static::$canextend = true;
         }
-        return static::$can_extend;
+        return static::$canextend;
     }
     
     static function adjust_field($table, $field, $len) {
@@ -71,15 +71,20 @@ class dbinfos {
         if (!static::can_extend()) return false;
         
         $size = static::get_field_size($table, $field);
-        if ($size >= 65535 or empty($size) or $size >= $len ) return false; // We extend only to this size
+        if ($size >= 1333 or empty($size) or $size == -1 or $size >= $len) return false; 
+                // We extend don't need or can't extend
         
+        // Compute the new size, as a multiple of 256 minus 1, able to contain $len bytes
+        $size = 255;
+        if ( $len > $size) $size = 511;
+        if ( $len > $size) $size = 1023;
+        if ( $len > $size) $size = 1333;
+        if ($len > $size) return false;     // We can't extend enough
+        
+                
         // Store size before extending it's it's the first extend in this API call
         if ( ! isset(static::$initial[$table])) static::$initial[$table] = [];
         if ( ! isset(static::$initial[$table][$field])) static::$initial[$table][$field] = $size;
-        
-        // Computte the new size, as a multiple of 256 minus 1, able to contain $len bytes
-        $size = 255;
-        while( $len > $size) $size = $size * 2 + 1;
         
         // Change the maximal lengh
         $dbman = $DB->get_manager();
@@ -131,6 +136,7 @@ class dbinfos {
         else {
             $col = $columns[$field];
             if (empty($col->max_length)) static::$tables[$table][$field] = false;
+            else if ($col->max_length == -1) static::$tables[$table][$field] = 1024 * 1024 * 1024;     // Very long....
             else static::$tables[$table][$field] = $col->max_length;
         }
         

@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class questionnaire extends \local_ezxlate\entity {
     
-    protected $mainTable = "questionnaire";
+    protected $maintable = "questionnaire";
     
     protected function define_fields() {
         $this->add_fields("name", "intro");

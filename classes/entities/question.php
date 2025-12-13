@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class question extends \local_ezxlate\entity {
     
-    protected $mainTable = "question";
+    protected $maintable = "question";
     
     protected function define_fields() {
         if (!is_numeric($this->record("questiontext"))) $this->add_field("questiontext");

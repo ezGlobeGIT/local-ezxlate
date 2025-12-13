@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class stickynotes extends \local_ezxlate\entity {
     
-    protected $mainTable = "stickynotes";
+    protected $maintable = "stickynotes";
     
     protected function define_fields() {
         $this->add_fields("name", "intro", "color1_meaning", "color1_meaning", "color2_meaning", "color3_meaning", "color4_meaning", "color5_meaning", "color6_meaning");

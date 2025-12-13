@@ -200,7 +200,7 @@ class api_set extends api {
             $module = new $class($cm->instance, null, []);     
         } else {
             // We don't have a specific class for this activity, we use the generic one
-            $module = new entity($module->instance, entity::module_name($cm->module), [ "name", "intro"]);
+            $module = new entity($cm->instance, entity::module_name($cm->module), [ "name", "intro"]);
         }
         $this->end($module);
         

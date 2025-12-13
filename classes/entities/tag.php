@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class tag extends \local_ezxlate\entity {
     
-    protected $mainTable = "tag";
+    protected $maintable = "tag";
     
     protected function define_fields() {
         $this->add_fields("name", "rawname", "description");

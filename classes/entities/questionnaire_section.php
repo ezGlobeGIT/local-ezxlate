@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class questionnaire_section extends \local_ezxlate\entity {
     
-    protected $mainTable = "questionnaire_fb_sections";
+    protected $maintable = "questionnaire_fb_sections";
     
     protected function define_fields() {
         $this->add_fields("sectionheading");

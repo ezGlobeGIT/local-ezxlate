@@ -178,9 +178,9 @@ abstract class api {
         if (empty($ips)) return false;      // No IP in allowed list means no restrictions on IP adresses
         
         // Get client IP
-        $my_ip = strtolower(trim($_SERVER["REMOTE_ADDR"]));
+        $myip = strtolower(trim($_SERVER["REMOTE_ADDR"]));
         foreach ($ips as $ip) {
-            if ($my_ip == $ip) return false;    // My IP is allowed
+            if ($myip == $ip) return false;    // My IP is allowed
         }
         // My IP is not found in allowed IP list
         return true; 

@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class page extends \local_ezxlate\entity {
     
-    protected $mainTable = "page";
+    protected $maintable = "page";
     
     protected function define_fields() {
         $this->add_fields("name", "intro", "content");

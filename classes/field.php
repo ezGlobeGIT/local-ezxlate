@@ -39,7 +39,7 @@ class field implements tree_interface {
     protected $name;
     protected $id;
     protected $value;
-    protected $onlyGet = false;
+    protected $onlyget = false;
     protected $gradebook = false;
     protected $error = "ok";
     protected static $updated = [];
@@ -72,7 +72,7 @@ class field implements tree_interface {
     }
 
     function only_get() {
-        $this->onlyGet = true;
+        $this->onlyget = true;
         return $this;
     }
 
@@ -94,9 +94,9 @@ class field implements tree_interface {
     }
     
     function update($newValue, $previous = "") {
-        if ( $this->onlyGet) return $this->error("notfound");
-        if ( empty($newValue) or empty(trim($newValue))
-                or empty($this->value) or empty(trim($this->value))) return $this->error("empty");
+        if ( $this->onlyget) return $this->error("notfound");
+        if ( empty(trim($this->value))) return $this->error("empty", "It's forbidden to change values of empty fields");
+        if ( empty(trim($newValue)) ) return $this->error("empty", "New value can't be empty");
         if ( ! $this->check_previous($previous)) return $this->error("previous");
         if ( ! $this->check_and_extend(mb_strlen($newValue))) return $this->error("toolong");
         if (!database::update($this->table, $this->id, $this->name, $newValue)) return $this->error("error");

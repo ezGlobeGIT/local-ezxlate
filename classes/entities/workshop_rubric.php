@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class workshop_rubric extends \local_ezxlate\entity {
     
-    protected $mainTable = "workshopform_rubric";
+    protected $maintable = "workshopform_rubric";
     
     protected function define_fields() {
         $this->add_fields("description");

@@ -63,11 +63,11 @@ namespace local_ezxlate;
  */
 class entity implements tree_interface {
     
-    /** @var string $mainTable table name to get mains fields, can be defined in inherited class */
-    protected $mainTable;       
+    /** @var string $maintable table name to get mains fields, can be defined in inherited class */
+    protected $maintable;       
     
-    /** @var bool $onlyGet true if this entity can't be updated */
-    protected $onlyGet = false;
+    /** @var bool $onlyget true if this entity can't be updated */
+    protected $onlyget = false;
     
     /** @var int $id primary key in the table for the current entity */
     protected $id;
@@ -115,17 +115,17 @@ class entity implements tree_interface {
      * Constructor
      * 
      * @param int|stdClass id of row to load, or content of the row
-     * @param string $mainTable table where the record is loaded, null possible if the attribut mainTable is set
+     * @param string $maintable table where the record is loaded, null possible if the attribut mainTable is set
      * @return array $fields list of field to make nodes directly, editable nodes
      * @return array $protectedFields list of field to make read only nodes directly
      */
-    function __construct($idOrRecord, $mainTable = null, $fields = [], $protectedFields = []) {
+    function __construct($idOrRecord, $maintable = null, $fields = [], $protectedFields = []) {
         if (is_array($idOrRecord)) $idOrRecord = (object) $idOrRecord;
         if (is_object($idOrRecord)) {
             $this->record = $idOrRecord;
-            $this->id = $this->record(database::id_name($this->mainTable));
+            $this->id = $this->record(database::id_name($this->maintable));
         } else $this->id = $idOrRecord;
-        if (!empty($mainTable)) $this->mainTable = $mainTable;
+        if (!empty($maintable)) $this->maintable = $maintable;
         foreach($protectedFields as $name => $value) $this->add_direct($name, $value)->only_get();
         if (!empty($fields)) $this->add_fields(...$fields);
         $this->define_fields();
@@ -198,7 +198,7 @@ class entity implements tree_interface {
             $name = $name[1];
         } else $alias = $name;
         if (is_null($aliasTableName)) {
-            $field = new field($this->record(), $this->mainTable, $this->id, $name);
+            $field = new field($this->record(), $this->maintable, $this->id, $name);
         } else {
             $field = new field($this->otherTables[$name], $this->otherDef[$aliasTableName][0], $this->otherDef[$aliasTableName][1], $name);
         }
@@ -218,15 +218,15 @@ class entity implements tree_interface {
      */      
     function link_table($table, $join, $fields = []) {
         if (is_array($join)) {
-            foreach($join as $target_name=>$this_name) break;
+            foreach($join as $targetname=>$thisname) break;
         } else {
-            $target_name = $join;
-            $this_name = database::id_name($this->mainTable);
+            $targetname = $join;
+            $thisname = database::id_name($this->maintable);
         }
-        $record = database::get($table, $this->record($this_name), $target_name);
+        $record = database::get($table, $this->record($thisname), $targetname);
         if (empty($record)) return null;
-        $id_name = database::id_name($table);
-        $id = $record->$id_name;
+        $idname = database::id_name($table);
+        $id = $record->$idname;
         foreach ($fields as $name) {
             if (strpos($name, ":")) {
                 $name = explode(":", $name);
@@ -243,27 +243,27 @@ class entity implements tree_interface {
      * Join a table with a back-link, so add an entities node
      * 
      * @param string $name name of the node
-     * @param string|array type $entityName of entity to join
+     * @param string|array type $entityname of entity to join
      *          if string : name of an entity (name of a class of namespace local_ezxlate\entities, ie question)
      *          if array : fields name to make enties with the fields as nodes
      * @param string $table name of the table to join in the database
      * @param string|array $join way to join the table : 
      *      the name of the field of joined table that must be equal to the id of main table
      *      or an array [ target => local ] to explain mainTable.local = joinedTable.target
-     * @param string $indexOn name of the field to take the indexes of entities list (default is the primary key)
+     * @param string $indexon name of the field to take the indexes of entities list (default is the primary key)
      * @return local_ezxlate\entities created node
      */        
-    function add_entities_from_table($name, $entityName, $table, $join, $indexOn = null) {
-        if (is_null($indexOn)) $indexOn = database::id_name($table);
+    function add_entities_from_table($name, $entityname, $table, $join, $indexon = null) {
+        if (is_null($indexon)) $indexon = database::id_name($table);
         if (is_array($join)) {
-            foreach($join as $target_name=>$this_name) break;
+            foreach($join as $targetname=>$thisname) break;
         } else {
-            $target_name = $join;
-            $this_name = database::id_name($this->mainTable);
+            $targetname = $join;
+            $thisname = database::id_name($this->maintable);
         }
-        $values = database::get_all($table, $this->record($this_name), $target_name);
-        if (is_array($entityName)) array_unshift($entityName, $table);
-        $this->fields[$name] = new entities($values, $entityName, $indexOn);
+        $values = database::get_all($table, $this->record($thisname), $targetname);
+        if (is_array($entityname)) array_unshift($entityname, $table);
+        $this->fields[$name] = new entities($values, $entityname, $indexon);
         return $this->fields[$name];
     }
     
@@ -275,9 +275,9 @@ class entity implements tree_interface {
     function get() {
         $result = [];
         foreach($this->fields as $name => $obj) {
-            $obj_result = $obj->get();
-            if ( ! empty($obj_result) or $obj_result === 0 or $obj_result === "0" )
-                    $result[$name] = $obj_result;
+            $objresult = $obj->get();
+            if ( ! empty($objresult) or $objresult === 0 or $objresult === "0" )
+                    $result[$name] = $objresult;
         }
         return $result;
     }
@@ -306,7 +306,7 @@ class entity implements tree_interface {
     protected function record($name = null) {
         // Get the curent record from database
         if ( ! is_object($this->record) and $this->record == -1) {
-            $record = database::get($this->mainTable, $this->id);
+            $record = database::get($this->maintable, $this->id);
             if (empty($record)) $record = new \stdClass();
             $this->record = $record;
         } else $record = $this->record;
@@ -335,7 +335,7 @@ class entity implements tree_interface {
      */
     function update($data, $previous = null) {
         // Update the fields
-        if ($this->onlyGet) return $this->error("notfound");
+        if ($this->onlyget) return $this->error("notfound");
         if (!is_object($data) and !is_array($data)) return $this->error("error");
         $ko = false;
         foreach ($data as $index => $value) {
@@ -343,9 +343,9 @@ class entity implements tree_interface {
                 $this->fieldsError[$index] = "notfound";
                 continue;
             }
-            if (!empty($previous) and isset($previous->$index)) $that_previous = $previous->$index;
-            else $that_previous = null;
-            if ( ! $this->fields[$index]->update($value, $that_previous)) {
+            if (!empty($previous) and isset($previous->$index)) $thatprevious = $previous->$index;
+            else $thatprevious = null;
+            if ( ! $this->fields[$index]->update($value, $thatprevious)) {
                 $ko = true;
                 $this->fieldsError[$index] = "partial";
             }
@@ -365,8 +365,8 @@ class entity implements tree_interface {
         $result = [];
         foreach ($this->fieldsError as $index => $error) {
             if ($error == "partial") {
-                $sub_result = $this->fields[$index]->get_errors();
-                if (!empty($sub_result)) $result[$index] = $sub_result;
+                $subresult = $this->fields[$index]->get_errors();
+                if (!empty($subresult)) $result[$index] = $subresult;
             } else if ($error != "ok") $result[$index] = $error;
         }
         if (empty($result)) return null;
@@ -381,7 +381,7 @@ class entity implements tree_interface {
      * @return tree_interface the object itself (return $this)
      */    
     function only_get() {
-        $this->onlyGet = true;
+        $this->onlyget = true;
         return $this;
     }
 }

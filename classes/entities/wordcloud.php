@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class wordcloud extends \local_ezxlate\entity {
     
-    protected $mainTable = "wordcloud";
+    protected $maintable = "wordcloud";
     
     protected function define_fields() {
         $this->add_fields("name", "intro");

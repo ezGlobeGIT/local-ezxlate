@@ -35,12 +35,10 @@ namespace local_ezxlate;
 class course {
     
     protected $record = null;
-    protected $idOrShortname;
     
-    function __construct($idOrShortname) {
-        $this->idOrShortname = $idOrShortname;
-        if (is_numeric($idOrShortname)) $this->record = database::get("course", $idOrShortname, "id");
-        else $this->record = database::get("course", $idOrShortname, "shortname");
+    function __construct($idorshortname) {
+        if (is_numeric($idorshortname)) $this->record = database::get("course", $idorshortname, "id");
+        else $this->record = database::get("course", $idorshortname, "shortname");
     }
     
     function __get($name) {
@@ -63,7 +61,7 @@ class course {
         return true;
     }
     
-    protected function check_if_in_list($name, $emptyIsYes = true) {
+    protected function check_if_in_list($name, $emptyisyes = true) {
         $config = get_config("local_ezxlate", $name);
         $config = str_replace(",", "\n", $config);
         $empty = true;
@@ -74,7 +72,7 @@ class course {
             if (is_numeric($course) and $course == $this->record->id) return true;
             if (is_string($course) and $course == $this->record->shortname) return true;
         }
-        if ($empty) return $emptyIsYes;
+        if ($empty) return $emptyisyes;
         else return false;
     }
     

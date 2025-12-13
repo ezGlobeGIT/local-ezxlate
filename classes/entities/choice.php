@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class choice extends \local_ezxlate\entity {
     
-    protected $mainTable = "choice";
+    protected $maintable = "choice";
     
     protected function define_fields() {
         $this->add_fields("name", "intro");

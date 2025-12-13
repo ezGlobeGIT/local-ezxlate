@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class glossary extends \local_ezxlate\entity {
     
-    protected $mainTable = "glossary";
+    protected $maintable = "glossary";
     
     protected function define_fields() {
         $this->add_fields("name", "intro");

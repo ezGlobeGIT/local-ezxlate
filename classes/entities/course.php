@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class course extends \local_ezxlate\entity {
     
-    protected $mainTable = "course";
+    protected $maintable = "course";
     
     protected function define_fields() {
         $this->add_field("courseid:id")->only_get();

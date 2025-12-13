@@ -36,14 +36,14 @@ namespace local_ezxlate;
 class value implements tree_interface {
     
     protected $value;
-    protected $onlyGet = false;
+    protected $onlyget = false;
     protected $error = "ok";
     
     function __construct($value) {
          $this->value = $value;
     }
     function only_get() {
-        $this->onlyGet = true;
+        $this->onlyget = true;
         return $this;
     }
 

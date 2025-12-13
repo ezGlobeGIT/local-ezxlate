@@ -35,7 +35,7 @@ namespace local_ezxlate\entities;
  */
 class feedback extends \local_ezxlate\entity {
     
-    protected $mainTable = "feedback";
+    protected $maintable = "feedback";
     
     protected function define_fields() {
         $this->add_fields("name", "intro", "page_after_submit");

@@ -35,10 +35,10 @@ namespace local_ezxlate;
  */
 class database {
         
-    protected static $id_names = [];     // Tables where id name is not "id" : [ "tableName" => "id_name", ... ]
+    protected static $idnames = [];     // Tables where id name is not "id" : [ "tableName" => "id_name", ... ]
     
     static function id_name($table) {
-        if (isset(static::$id_names[$table])) return static::$id_names[$table];
+        if (isset(static::$idnames[$table])) return static::$idnames[$table];
         else return "id";
     }
     
@@ -78,12 +78,12 @@ class database {
         }
     }
     
-    static function update($table, $id, $fieldName, $newValue) {
+    static function update($table, $id, $fieldname, $newvalue) {
         global $DB;
         $object = new \stdClass;
-        $id_name = static::id_name($table);
-        $object->$id_name = $id;
-        $object->$fieldName = $newValue;
+        $idname = static::id_name($table);
+        $object->$idname = $id;
+        $object->$fieldname = $newvalue;
         try {
             $result = $DB->update_record($table, $object);
             return $result;

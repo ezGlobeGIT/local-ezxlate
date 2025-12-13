@@ -129,7 +129,7 @@ class api_get extends api {
             return $this->error("restricted", "User defined for the API is not allowed to update this module");
         
         // Construct the entity to manage this module
-        $infos_fields = [
+        $infosfields = [
             "courseid" => $module->course,
             "module" => entity::module_name($module->module),
             "cmid" => $module->id
@@ -138,10 +138,10 @@ class api_get extends api {
         $class = "\\local_ezxlate\\entities\\" . entity::module_name($module->module);
         if ( class_exists($class)) {
             // We have a specific class
-            $module = new $class($module->instance, null, [], $infos_fields);
+            $module = new $class($module->instance, null, [], $infosfields);
         } else {
             // We don't have specific class, we use the generic one
-            $module = new entity($module->instance, entity::module_name($module->module), [ "name", "intro"], $infos_fields);
+            $module = new entity($module->instance, entity::module_name($module->module), [ "name", "intro"], $infosfields);
         }
         // Extract data to translate for Moodle database
         $this->data = $module->get();
@@ -246,12 +246,12 @@ class api_get extends api {
         }
         // Build list of questions
         $questions = new \stdClass();
-        foreach(database::get_all("question_bank_entries", $this->param->categoryid, "questioncategoryid") as $question_bank) {
+        foreach(database::get_all("question_bank_entries", $this->param->categoryid, "questioncategoryid") as $questionbank) {
             $sql = "SELECT {question}.* FROM {question} "
                     . " LEFT JOIN {question_versions} ON {question_versions}.questionid = {question}.id "
                     . " WHERE questionbankentryid = :qb ";
             if ($last) $sql .= " ORDER BY version DESC LIMIT 1";  // WE want only last version of each question
-            foreach(database::load_multiple($sql, ["qb" => $question_bank->id]) as $record) {
+            foreach(database::load_multiple($sql, ["qb" => $questionbank->id]) as $record) {
                 // If user can't edit this question, we skip it
                 if ( ! question_has_capability_on($record->id, 'edit') ) continue; 
                 // Get all texts to translate from the entity "question"
